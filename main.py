@@ -1,4 +1,17 @@
 from valueTree import ValueTree
+from database_interface import get_line, create_line, delete_line, get_all_lines
+
+
+
+
+
+all_lines_tree = ValueTree()
+
+
+# laod db into tree
+all_lines = get_all_lines()
+for line in all_lines:
+    all_lines_tree.insertWithValue(line[1], line[0])
 
 
 
@@ -6,15 +19,10 @@ from valueTree import ValueTree
 
 
 
-
-sentence_one = ["hello", "shmuli", "hey", "bye"]
-sentence_two = ["hello", "hey", "shmuli", "bye"]
-sentence_three = ["hey", "shmuli", "bye", "djalskdj", "hello"]
 
 
 all_sentences_list = [None]
 
-all_sentences_tree = ValueTree()
 
 
 
@@ -22,14 +30,16 @@ all_sentences_tree = ValueTree()
 
 
 
-def makeCommitSig(sentence_sig_is_for):
+def makeCommitSig(fileName):
+    with open(fileName) as f:
+        lines = f.readlines()
     commit_sig = []
-    for word in sentence_sig_is_for:
-        value = all_sentences_tree.getValue(word)
+    for word in lines:
+        value = all_lines_tree.getValue(word)
         if value == None:
             #create a value for it while placing it in the tree
-            all_sentences_list.append(word)
-            value = all_sentences_tree.insertWithValue(word, value)
+            value = create_line(word)
+            all_lines_tree.insertWithValue(word, value)
 
         commit_sig.append(value)
 
@@ -37,20 +47,23 @@ def makeCommitSig(sentence_sig_is_for):
     return commit_sig
 
 
-def applyCommitSig(commit_sig) -> list[str]:
-    return [all_sentences_list[line] for line in commit_sig]    
+def applyCommitSig(commit_sig, fileName) -> list[str]:
+    lines = [all_sentences_list[line] for line in commit_sig]    
+    with open(fileName, 'w') as f:
+        f.writelines(lines)
+    return lines
 
 
 
 
 
 def full_cycle(sentence: list[str]) -> list[str]:
+    """test function"""
     commit_sig = makeCommitSig(sentence)
     print(f"{commit_sig = }")
     print(f"{applyCommitSig(commit_sig) = }")
 
 
-full_cycle(sentence_one)
-full_cycle(sentence_two)
-full_cycle(sentence_three)
 
+
+print(f"{makeCommitSig('thoughts') = }")
