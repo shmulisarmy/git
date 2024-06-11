@@ -1,5 +1,6 @@
+import os, json, sys
 from valueTree import ValueTree
-from database_interface import get_line, create_line, delete_line, get_all_lines
+from database_interface import get_line, create_line, delete_line, get_all_lines, get_lines_in, get_fileCommit, create_fileCommit, delete_fileCommit, get_all_fileCommits, getCommitByName
 
 
 
@@ -15,22 +16,7 @@ for line in all_lines:
 
 
 
-
-
-
-
-
-
-all_sentences_list = [None]
-
-
-
-
-
-
-
-
-def makeCommitSig(fileName):
+def makeCommitSigFile(commitName, fileName):
     with open(fileName) as f:
         lines = f.readlines()
     commit_sig = []
@@ -44,26 +30,36 @@ def makeCommitSig(fileName):
         commit_sig.append(value)
 
 
+    create_fileCommit(commitName, json.dumps(commit_sig), os.path.basename(fileName))
+
+
+
     return commit_sig
 
 
-def applyCommitSig(commit_sig, fileName) -> list[str]:
-    lines = [all_sentences_list[line] for line in commit_sig]    
+def applyCommitSigFile(commitName, fileName) -> list[str]:
+    fileCommit = getCommitByName(commitName)
+    print(f"__debug__ fileCommit: {fileCommit}")
+    commitSigJson = fileCommit[2]
+    print(f"__debug__ commitSigJson: {commitSigJson}")
+    commitSig = json.loads(commitSigJson)
+    print(f"__debug__ commit_sig_for_file: {commitSig}")
+    lines = [i[1] for i in get_lines_in(commitSig)]
     with open(fileName, 'w') as f:
         f.writelines(lines)
     return lines
 
 
 
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("usage: python main.py makeCommitSigFile <commitName> <fileName>")
+        print("or: python main.py applyCommitSigFile <commitName> <fileName>")
+        exit(1)
+    if sys.argv[1] == "makeCommitSigFile":
+        makeCommitSigFile(sys.argv[2], sys.argv[3])
+
+    elif sys.argv[1] == "applyCommitSigFile":
+        applyCommitSigFile(sys.argv[2], sys.argv[3])
 
 
-def full_cycle(sentence: list[str]) -> list[str]:
-    """test function"""
-    commit_sig = makeCommitSig(sentence)
-    print(f"{commit_sig = }")
-    print(f"{applyCommitSig(commit_sig) = }")
-
-
-
-
-print(f"{makeCommitSig('thoughts') = }")
