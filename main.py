@@ -1,4 +1,4 @@
-from custom_packages.searchTree import SearchTree
+from valueTree import ValueTree
 
 
 
@@ -14,8 +14,7 @@ sentence_three = ["hey", "shmuli", "bye", "djalskdj", "hello"]
 
 all_sentences_list = [None]
 
-all_sentences_tree = SearchTree()
-all_sentences_tree.word_count = 0
+all_sentences_tree = ValueTree()
 
 
 
@@ -28,11 +27,9 @@ def makeCommitSig(sentence_sig_is_for):
     for word in sentence_sig_is_for:
         value = all_sentences_tree.getValue(word)
         if value == None:
-            all_sentences_list.append(word)
-            all_sentences_tree.word_count += 1
-            value = all_sentences_tree.word_count
             #create a value for it while placing it in the tree
-            all_sentences_tree.insertWithValue(word, value)
+            all_sentences_list.append(word)
+            value = all_sentences_tree.insertWithValue(word, value)
 
         commit_sig.append(value)
 
