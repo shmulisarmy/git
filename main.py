@@ -36,8 +36,21 @@ def makeCommitSig(sentence_one, sentence_two):
     return commit_sig
 
 
+def applyCommitSig(sentence_to_create_from, commit_sig):
+    outcome_sentence = []
+    for word_or_line in commit_sig:
+        if type(word_or_line) == int:
+            outcome_sentence.append(sentence_to_create_from[word_or_line])
+        else:
+            # word_or_line == word
+            outcome_sentence.append(word_or_line)
+    return outcome_sentence
+
+
+
 commit_sig = makeCommitSig(sentence_one, sentence_two)
     
 
 print(f"{commit_sig = }")
+print(f"{applyCommitSig(sentence_one, commit_sig) = }")
 
