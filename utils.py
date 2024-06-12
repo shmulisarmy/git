@@ -1,4 +1,4 @@
-import os, json, sys
+import os, json
 from valueTree import ValueTree
 from database_interface import get_line, create_line, get_all_lines, get_lines_in, get_fileCommit, create_fileCommit, get_all_fileCommits, getCommitByName
 
@@ -54,11 +54,8 @@ def applyCommitSigFileFromId(fileCommitId):
 
 def applyCommitSigFile(commitName, fileName) -> list[str]:
     fileCommit = getCommitByName(commitName)
-    print(f"__debug__ fileCommit: {fileCommit}")
     commitSigJson = fileCommit[2]
-    print(f"__debug__ commitSigJson: {commitSigJson}")
     commitSig = json.loads(commitSigJson)
-    print(f"__debug__ commit_sig_for_file: {commitSig}")
     lines = [i[1] for i in get_lines_in(commitSig)]
     with open(fileName, 'w') as f:
         f.writelines(lines)

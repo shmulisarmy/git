@@ -28,6 +28,10 @@ def applyDirectoryCommit(commitName, directoryName):
         applyCommitSigFileFromId(fileCommitId)
 
 
+
+
+
+
 if len(sys.argv) < 4:
     print("usage: python3 fullCommit.py <commitName> <directory>")
     exit(1)
