@@ -140,3 +140,18 @@ def delete_fullCommit(id: int):
             cursor.execute(query, (id))
                 
     
+def get_fullCommits_by_directory(directory: str) -> list[tuple]:
+        """select id, name, commitSigJson, fileName from fileCommits"""
+        query = "select id, name, commitSigJson, fileName from fullCommits where directory = ?"
+        with sqlite3.connect(dbFileName) as conn:
+            cursor = conn.cursor()
+            result = cursor.execute(query, (directory,)).fetchall()
+        return result
+
+
+def get_fullCommit_by_name_and_directory(commitName, directory) -> tuple:
+    query = "select id, name, commitSigJson, fileName from fullCommits where name = ? and directory = ?"
+    with sqlite3.connect(dbFileName) as conn:
+        cursor = conn.cursor()
+        result = cursor.execute(query, (commitName, directory)).fetchone()
+    return result
