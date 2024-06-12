@@ -8,7 +8,7 @@ def get_line(id: int) -> tuple:
         query = "select content from lines where id = ?"
         with sqlite3.connect('main.db') as conn:
             cursor = conn.cursor()
-            result = cursor.execute(query, (id)).fetchone()
+            result = cursor.execute(query, (id,)).fetchone()
         return result
     
     
@@ -94,3 +94,49 @@ def getCommitByName(commitName: str) -> tuple:
         cursor = conn.cursor()
         result = cursor.execute(query, (commitName,)).fetchone()
     return result
+
+
+
+
+def get_fullCommit(id: int) -> tuple:
+        '''gets name, directory, fileCommitIdsJson from fullCommits'''
+        query = "select name, directory, fileCommitIdsJson from fullCommits where id = ?"
+        with sqlite3.connect('main.db') as conn:
+            cursor = conn.cursor()
+            result = cursor.execute(query, (id)).fetchone()
+        return result
+
+def get_fullCommit_by_name(name: str) -> tuple:
+        '''gets name, directory, fileCommitIdsJson from fullCommits'''
+        query = "select name, directory, fileCommitIdsJson from fullCommits where name = ?"
+        with sqlite3.connect('main.db') as conn:
+            cursor = conn.cursor()
+            result = cursor.execute(query, (name,)).fetchone()
+        return result
+    
+    
+def create_fullCommit(name, directory, fileCommitIdsJson) -> int:
+        '''inserts name, directory, fileCommitIdsJson into fullCommits'''
+        print(f"inside create_fullCommit: {name}, {directory}, {fileCommitIdsJson}")
+        query = "insert into fullCommits (name, directory, fileCommitIdsJson) values (?, ?, ?)"
+        with sqlite3.connect('main.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, (name, directory, fileCommitIdsJson))
+        return cursor.lastrowid
+    
+    
+def update_fullCommit(name, directory, fileCommitIdsJson, id: int) -> int:
+        '''updates name, directory, fileCommitIdsJson in fullCommits table'''
+        query = "update fullCommits set name = ?, directory = ?, fileCommitIdsJson = ? where id = ?"
+        with sqlite3.connect('main.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, name, directory, fileCommitIdsJson, id)
+    
+    
+def delete_fullCommit(id: int):
+        query = "delete from fullCommits where id = ?"
+        with sqlite3.connect('main.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, (id))
+                
+    

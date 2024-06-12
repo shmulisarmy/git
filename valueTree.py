@@ -14,6 +14,11 @@ inifiniteDict = lambda: defaultdict(inifiniteDict)
 class ValueTree:
     """
     methods:
+        insert(word)\n
+        insertWithValue(word, value)\n
+        insertDict\n
+        getValue\n
+        valueSearch\n
     """
     def insert(self, word):
         node = self.root
